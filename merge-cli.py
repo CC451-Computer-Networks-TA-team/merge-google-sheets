@@ -48,6 +48,7 @@ def get_sheets_keys():
             print("Invalid Input (Must be integer and greater than 1)")
             continue
     # Get the sheet keys
+    print("*Sheet keys can be found in the url of the spreadsheet")
     for i in range(num_of_sheets):
         while True:
             key = input(f'Enter Sheet#{i+1} key: ')
@@ -65,7 +66,7 @@ def get_sheets_keys():
         else:
             print("Invalid Column ID (Either letters only or integer > 0)")
             continue
-    return [num_of_sheets, sheets, col_to_num(col)]
+    return [sheets, col_to_num(col)]
 
 
 def col_to_num(col):
@@ -110,14 +111,20 @@ def merge_sheets(main_key, main_sheet, sheets, col):
             if row[col] not in unique_column_values:
                 new_rows.append(row)
                 unique_column_values.add(row[col])
-    SheetsEngine.append_to_sheet(main_key, new_rows)
+    try:
+        SheetsEngine.append_to_sheet(main_key, new_rows)
+        print('Merged successfully')
+    except:
+        print('Merging failed while appending to the first sheet')
+
 
 
 def main():
-    num_of_sheets, sheets_keys, col = get_sheets_keys()
+    sheets_keys, col = get_sheets_keys()
     sheets_values = keys_to_sheets(sheets_keys)
     main_key, main_values = sheets_keys[0], sheets_values[0]
     merge_sheets(main_key, main_values, sheets_values[1:], col)
+
     
 
 if __name__ == "__main__":

@@ -9,3 +9,4 @@
 
 ## TODO
 * Change authentication method
+* Create a new sheet for the merged sheets rather than updating the first sheet
