@@ -123,17 +123,17 @@ def get_email():
             continue
     
 
-def merge_sheets(main_key, main_sheet, sheets, col):
+def merge_sheets(sheets, col):
     """
     Takes a main sheet and multiple other sheets to merge them on a certain col
     then creates a new spreadsheet to add the result to then transfers ownership to the user email
     """
-    unique_column_values = set([row[col] for row in main_sheet])
-    new_rows = []
+    unique_column_values = set()
+    result_rows = []
     for sheet in sheets:
         for row in sheet:
             if row[col] not in unique_column_values:
-                new_rows.append(row)
+                result_rows.append(row)
                 unique_column_values.add(row[col])
 
     # Create a new spreadsheet and add the result of the merge to it
@@ -141,7 +141,7 @@ def merge_sheets(main_key, main_sheet, sheets, col):
         new_spreadsheet_title = f"merge-result-{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         new_spreadsheet = SheetsEngine.create_new(new_spreadsheet_title)
         new_sheet = new_spreadsheet.sheet1
-        new_sheet.append_rows(main_sheet + new_rows)
+        new_sheet.append_rows(result_rows)
     except Exception as e:
         print("Failed while creating the result spreadsheet\n"+str(e))
 
@@ -158,8 +158,7 @@ def merge_sheets(main_key, main_sheet, sheets, col):
 def main():
     sheets_keys, col = get_sheets_keys()
     sheets_values = keys_to_sheets(sheets_keys)
-    main_key, main_values = sheets_keys[0], sheets_values[0]
-    merge_sheets(main_key, main_values, sheets_values[1:], col)
+    merge_sheets(sheets_values, col)
 
 
 if __name__ == "__main__":
