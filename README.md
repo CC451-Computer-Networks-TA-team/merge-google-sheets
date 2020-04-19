@@ -9,3 +9,4 @@
 
 ## TODO
 * Change authentication method
+* Change input method to a json file
